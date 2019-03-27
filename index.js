@@ -5,7 +5,7 @@ const utf8 = require('crypto-js/enc-utf8');
 const schedule = require('node-schedule');
 const GitHub = require('github-api');
 
-schedule.scheduleJob('3 0 * * *', getUrl);
+schedule.scheduleJob('3 0,12 * * *', getUrl);
 
 function getUrl() {
   console.log('start to get url.');
