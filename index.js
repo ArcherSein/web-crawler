@@ -4,8 +4,14 @@ const base64 = require('crypto-js/enc-base64');
 const utf8 = require('crypto-js/enc-utf8');
 const schedule = require('node-schedule');
 const GitHub = require('github-api');
+const args = process.argv;
+if(args[2]) {
+  console.log('start getUrl');
+  getUrl();
+} else {
+  schedule.scheduleJob('3 */6 * * *', getUrl);
+}
 
-schedule.scheduleJob('3 */6 * * *', getUrl);
 
 function getUrl() {
   console.log('start to get url.');
