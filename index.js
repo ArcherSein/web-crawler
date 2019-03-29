@@ -4,14 +4,15 @@ const base64 = require('crypto-js/enc-base64');
 const utf8 = require('crypto-js/enc-utf8');
 const schedule = require('node-schedule');
 const GitHub = require('github-api');
+let contentCache = '';
 const args = process.argv;
-if(args[2]) {
+
+if (args[2]) {
   console.log('start getUrl');
   getUrl();
 } else {
-  schedule.scheduleJob('3 */6 * * *', getUrl);
+  schedule.scheduleJob('2 */1 * * *', getUrl);
 }
-
 
 function getUrl() {
   console.log('start to get url.');
@@ -29,8 +30,12 @@ function getUrl() {
             const urls = Array.from(btns).map(btn => {
               return $(btn).data('clipboardText');
             });
-            const content = base64.stringify(utf8.parse(urls.join('')));
-            pushToGithub(content);
+            const newContent = base64.stringify(utf8.parse(urls.join('')));
+            if (newContent !== contentCache) {
+              pushToGithub(newContent);
+            } else {
+              console.log('no need update.');
+            }
           } catch (e) {
             console.log(e);
           }
@@ -44,16 +49,17 @@ function getUrl() {
 
 function pushToGithub(content) {
   const gh = new GitHub({
-    token: process.env.GITHUB_API_TOKEN
+    token: '6b9c7772067b31da92a8c8679883edc3e3b40677'
   });
   let repo = gh.getRepo('ArcherSein', 'web-crawler');
   repo.writeFile('master', 'dist/url.txt', content, 'update url list', function(
-    error,
-    result
+    error
   ) {
     if (error) {
       console.log(error);
+    } else {
+      contentCache = content;
+      console.log('success.');
     }
-    console.log(result);
   });
 }
