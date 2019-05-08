@@ -30,7 +30,7 @@ function getUrl() {
             const urls = Array.from(btns).map(btn => {
               return $(btn).data('clipboardText');
             });
-            const newContent = base64.stringify(utf8.parse(urls.join('')));
+            const newContent = base64.stringify(utf8.parse(urls.join('').trim()));
             if (newContent !== contentCache) {
               pushToGithub(newContent);
             } else {
