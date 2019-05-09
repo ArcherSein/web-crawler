@@ -49,7 +49,7 @@ function getUrl() {
 
 function pushToGithub(content) {
   const gh = new GitHub({
-    token: '6b9c7772067b31da92a8c8679883edc3e3b40677'
+    token: process.env.Git_Token
   });
   let repo = gh.getRepo('ArcherSein', 'web-crawler');
   repo.writeFile('master', 'dist/url.txt', content, 'update url list', function(
